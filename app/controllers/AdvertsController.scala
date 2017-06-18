@@ -49,7 +49,7 @@ class AdvertsController @Inject()(advertService: AdvertService) {
 
     advertResult match {
       case JsSuccess(advert, _) =>
-        advertService.update(id).map(_ => Accepted)
+        advertService.update(id, advert).map(_ => Accepted)
       case error: JsError =>
         println(error)
         Future(BadRequest)

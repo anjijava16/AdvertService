@@ -72,13 +72,13 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
     }
 
     "update advert by id" in {
-      mockAdvertService.update(eqTo(guid)) returns Future(true)
+      mockAdvertService.update(eqTo(guid), eqTo(newCarAd)) returns Future(true)
 
       val request = FakeRequest().withBody(newCarAdJson)
       val result: Future[Result] = controller.update(guid)(request)
 
       status(result) must be equalTo ACCEPTED
-      there was mockAdvertService.update(eqTo(guid))
+      there was mockAdvertService.update(eqTo(guid), eqTo(newCarAd))
     }
 
     "delete advert by id" in {
@@ -87,7 +87,7 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
       val result: Future[Result] = controller.delete(guid)(FakeRequest())
 
       status(result) must be equalTo ACCEPTED
-      there was mockAdvertService.update(eqTo(guid))
+      there was mockAdvertService.delete(eqTo(guid))
     }
 
     "reject incorrect car advert with Bad Request" in {

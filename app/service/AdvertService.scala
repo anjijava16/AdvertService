@@ -11,11 +11,11 @@ import scala.concurrent.Future
 class AdvertService @Inject()(advertRepository: AdvertRepository) {
   def delete(id: String):Future[Any] = ???
 
-  def update(id: String): Future[Any] = ???
+  def update(id: String, advert: Advert): Future[Boolean] = advertRepository.update(id, advert)
 
   def select(id: String): Future[Option[Advert]] = ???
 
-  def save(advert: Advert): Future[Any] = ???
+  def save(advert: Advert): Future[Boolean] = advertRepository.save(advert)
 
   def findSortedBy(sortBy: String): Future[List[JsObject]] = advertRepository.findSortedBy(sortBy)
 

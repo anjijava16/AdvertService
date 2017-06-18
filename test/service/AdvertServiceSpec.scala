@@ -1,7 +1,7 @@
 package service
 
-import models.Advert
 import models.Advert.{Fuel, IsNew, Price, Title}
+import models.{Advert, Diesel}
 import org.mockito.Matchers.{eq => eqTo}
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
@@ -25,8 +25,10 @@ class AdvertServiceSpec extends Specification with Mockito {
     Price -> newCarPrice,
     IsNew -> true
   )
-
+  val newCarAd = Advert(None, newCarTitle, Diesel(), newCarPrice, true)
   val ads = List(newCarAdJson)
+
+  val guid = "59438ac04a12f658004a435b"
 
   "AdvertService" should {
     "find sorted by id" in {
@@ -36,6 +38,22 @@ class AdvertServiceSpec extends Specification with Mockito {
       advertService.findSortedBy(sortBy)
 
       there was mockAdvertRepository.findSortedBy(eqTo(sortBy))
+    }
+
+    "create advert" in {
+      mockAdvertRepository.save(newCarAd) returns Future(true)
+
+      advertService.save(newCarAd)
+
+      there was mockAdvertRepository.save(newCarAd)
+    }
+
+    "update advert" in {
+      mockAdvertRepository.update(guid, newCarAd) returns Future(true)
+
+      advertService.update(guid, newCarAd)
+
+      there was mockAdvertRepository.update(guid, newCarAd)
     }
   }
 }
