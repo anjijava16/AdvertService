@@ -1,11 +1,14 @@
 package service
 
+import javax.inject.Inject
+
 import models.Advert
 import play.api.libs.json.JsObject
+import repositories.AdvertRepository
 
 import scala.concurrent.Future
 
-class AdvertService {
+class AdvertService @Inject()(advertRepository: AdvertRepository) {
   def delete(id: String):Future[Any] = ???
 
   def update(id: String): Future[Any] = ???
@@ -14,6 +17,6 @@ class AdvertService {
 
   def save(advert: Advert): Future[Any] = ???
 
-  def findSortedBy(sortBy: String): Future[List[JsObject]] = ???
+  def findSortedBy(sortBy: String): Future[List[JsObject]] = advertRepository.findSortedBy(sortBy)
 
 }
