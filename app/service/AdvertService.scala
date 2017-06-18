@@ -6,6 +6,8 @@ import play.api.libs.json.JsObject
 import scala.concurrent.Future
 
 class AdvertService {
+  def delete(id: String):Future[Any] = ???
+
   def update(id: String): Future[Any] = ???
 
   def select(id: String): Future[Option[Advert]] = ???

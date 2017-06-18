@@ -37,10 +37,10 @@ class AdvertsController {
   }
 
   def read(id: String): Action[AnyContent] = Action.async { implicit request =>
-    advertService.select(id).map(_ match {
+    advertService.select(id).map {
       case Some(advert) => Ok(Json.toJson(advert))
       case None => Ok
-    })
+    }
   }
 
   def update(id: String) = Action.async(BodyParsers.parse.json) { implicit request =>
@@ -53,5 +53,9 @@ class AdvertsController {
         println(error)
         Future(BadRequest)
     }
+  }
+
+  def delete(id: String) = Action.async { implicit request =>
+    advertService.delete(id).map(_ => Accepted)
   }
 }
