@@ -59,5 +59,20 @@ class AdvertSpec extends Specification {
         }
       }) mustEqual true
     }
+
+    "should fail if mandatory fields are missing" in {
+      val incompleteAd = Json.obj(
+        Title -> "Incomplete car ad",
+        Price -> 1234
+      )
+
+      val advertResult = incompleteAd.validate[Advert]
+
+      (advertResult match {
+        case _:JsError =>
+          true
+        case _ => false
+      }) mustEqual true
+    }
   }
 }
