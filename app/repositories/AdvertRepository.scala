@@ -7,6 +7,9 @@ import scala.concurrent.Future
 
 class AdvertRepository {
   type Status = Boolean
+
+  def delete(id: String):Future[Status] = ???
+
   def update(id: String, advert: Advert):Future[Status] = ???
 
   def save(advert: Advert): Future[Status] = ???

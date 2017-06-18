@@ -9,7 +9,7 @@ import repositories.AdvertRepository
 import scala.concurrent.Future
 
 class AdvertService @Inject()(advertRepository: AdvertRepository) {
-  def delete(id: String):Future[Any] = ???
+  def delete(id: String):Future[Boolean] = advertRepository.delete(id)
 
   def update(id: String, advert: Advert): Future[Boolean] = advertRepository.update(id, advert)
 
