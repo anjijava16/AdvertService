@@ -18,11 +18,7 @@ import scala.concurrent.Future
 class AdvertsControllerSpec extends Specification with Results with Mockito {
   val mockAdvertService = mock[AdvertService]
 
-  class TestController extends AdvertsController() {
-    override def advertService: AdvertService = mockAdvertService
-  }
-
-  val controller = new TestController()
+  val controller = new AdvertsController(mockAdvertService)
 
   private val newCarTitle = "New car"
   private val newCarPrice = 1234

@@ -1,5 +1,7 @@
 package controllers
 
+import javax.inject.Inject
+
 import models.Advert
 import models.Advert._
 import play.api.libs.json.{JsError, JsSuccess, Json}
@@ -10,8 +12,7 @@ import service.AdvertService
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AdvertsController {
-  def advertService = new AdvertService()
+class AdvertsController @Inject()(advertService: AdvertService) {
 
   def list = Action.async { implicit request =>
     val sortBy = request.getQueryString("sortBy").getOrElse(Id)
