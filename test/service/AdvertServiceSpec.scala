@@ -9,7 +9,7 @@ import play.api.libs.json.Json
 import repositories.AdvertRepository
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class AdvertServiceSpec extends Specification with Mockito {
 
@@ -33,11 +33,11 @@ class AdvertServiceSpec extends Specification with Mockito {
   "AdvertService" should {
     "find sorted by id" in {
       val sortBy = Advert.Id
-      mockAdvertRepository.findSortedBy(eqTo(sortBy)) returns Future(ads)
+      mockAdvertRepository.findSortedBy(eqTo(sortBy))(any[ExecutionContext]) returns Future(ads)
 
       advertService.findSortedBy(sortBy)
 
-      there was mockAdvertRepository.findSortedBy(eqTo(sortBy))
+      there was mockAdvertRepository.findSortedBy(eqTo(sortBy))(any[ExecutionContext])
     }
 
     "create advert" in {

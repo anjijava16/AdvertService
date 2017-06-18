@@ -7,6 +7,7 @@ import play.api.libs.json.JsObject
 import repositories.AdvertRepository
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class AdvertService @Inject()(advertRepository: AdvertRepository) {
   def delete(id: String):Future[Boolean] = advertRepository.delete(id)
