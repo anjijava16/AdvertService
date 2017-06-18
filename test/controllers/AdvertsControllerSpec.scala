@@ -1,16 +1,15 @@
+package controllers
 
-import java.util.concurrent.TimeUnit
 
-import akka.util.Timeout
-import controllers.AdvertsController
 import models.Advert._
+import models.{Advert, Diesel}
 import org.mockito.Matchers.{eq => eqTo}
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import play.api.libs.json.{JsArray, Json}
-import play.api.mvc.Results
+import play.api.mvc.{Result, Results}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{GET, contentAsJson}
+import play.api.test.Helpers.{GET, contentAsJson, status, _}
 import service.AdvertService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -33,10 +32,8 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
     Price -> newCarPrice,
     IsNew -> true
   )
-
+  val newCarAd = Advert(None, newCarTitle, Diesel(), newCarPrice, true)
   val ads = List(newCarAdJson)
-
-  implicit val timeout = Timeout(5, TimeUnit.SECONDS)
 
   "AdvertsController" should {
     "list adverts sorted by id by default" in {
@@ -45,7 +42,7 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
       val result = controller.list().apply(FakeRequest())
 
       contentAsJson(result) must be equalTo JsArray(ads)
-      there was (mockAdvertService).findSortedBy(eqTo(Id))
+      there was mockAdvertService.findSortedBy(eqTo(Id))
     }
 
     "list adverts sorted by query param" in {
@@ -54,9 +51,18 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
       val result = controller.list().apply(FakeRequest(GET, "/api/adverts?sortBy=price"))
 
       contentAsJson(result) must be equalTo JsArray(ads)
-      there was (mockAdvertService).findSortedBy(eqTo(Price))
+      there was mockAdvertService.findSortedBy(eqTo(Price))
     }
+    "create new car advert" in {
+      mockAdvertService.save(eqTo(newCarAd)) returns Future(true)
 
+      val request = FakeRequest().withBody(newCarAdJson)
+      val result: Future[Result] = controller.create()(request)
+
+
+      status(result) must be equalTo CREATED
+      there was mockAdvertService.save(eqTo(newCarAd))
+    }
   }
 
 }
