@@ -2,7 +2,7 @@ package models
 
 import org.joda.time.DateTime
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Reads}
+import play.api.libs.json._
 
 case class Advert(id: Option[String],
                   title: String,
@@ -21,7 +21,7 @@ case class Petrol() extends FuelType {
 }
 
 case class Diesel() extends FuelType {
-  override def fuelType = "Petrol"
+  override def fuelType = "Diesel"
 }
 
 object Advert {
@@ -41,6 +41,11 @@ object Advert {
   val dateTimeFormat = "dd-MM-yyyy"
 
   implicit val dateTimeReads = Reads.jodaDateReads(dateTimeFormat)
+  implicit val dateTimeWrites = Writes.jodaDateWrites(dateTimeFormat)
+  implicit val fuelTypeWrites:Writes[FuelType] = new Writes[FuelType] {
+    override def writes(o: FuelType): JsValue = Json.toJson(o.fuelType)
+  }
+
   implicit val advertReads: Reads[Advert] = (
     (JsPath \ Id).readNullable[String] and
       (JsPath \ Title).read[String] and
@@ -50,4 +55,14 @@ object Advert {
       (JsPath \ Mileage).readNullable[Int] and
       (JsPath \ FirstRegistration).readNullable[DateTime]
     ) (Advert.apply _)
+
+  implicit val advertWrites: Writes[Advert] = (
+    (JsPath \ Id).writeNullable[String] and
+      (JsPath \ Title).write[String] and
+      (JsPath \ Fuel).write[FuelType] and
+      (JsPath \ Price).write[Int] and
+      (JsPath \ IsNew).write[Boolean] and
+      (JsPath \ Mileage).writeNullable[Int] and
+      (JsPath \ FirstRegistration).writeNullable[DateTime]
+    ) (unlift(Advert.unapply))
 }

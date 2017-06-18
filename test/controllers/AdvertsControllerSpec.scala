@@ -19,7 +19,7 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
   val mockAdvertService = mock[AdvertService]
 
   class TestController extends AdvertsController() {
-    override def advertRepo: AdvertService = mockAdvertService
+    override def advertService: AdvertService = mockAdvertService
   }
 
   val controller = new TestController()
@@ -34,6 +34,8 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
   )
   val newCarAd = Advert(None, newCarTitle, Diesel(), newCarPrice, true)
   val ads = List(newCarAdJson)
+
+  val guid = "59438ac04a12f658004a435b"
 
   "AdvertsController" should {
     "list adverts sorted by id by default" in {
@@ -62,6 +64,15 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
 
       status(result) must be equalTo CREATED
       there was mockAdvertService.save(eqTo(newCarAd))
+    }
+
+    "get advert by id" in {
+      mockAdvertService.select(eqTo(guid)) returns Future(Some(newCarAd))
+
+      val result: Future[Result] = controller.read(guid).apply(FakeRequest())
+
+      contentAsJson(result) must be equalTo newCarAdJson
+      there was mockAdvertService.select(eqTo(guid))
     }
   }
 

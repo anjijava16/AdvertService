@@ -17,7 +17,7 @@ class AdvertSpec extends Specification {
 
   private val oldCarTitle = "Old car"
   private val oldCarPrice = 2345
-  private val dateOfRegistration = DateTime.now().minusYears(3)
+  private val dateOfRegistration = DateTime.now().minusYears(3).withTime(0, 0, 0, 0)
   private val oldCarMileage = 12
   val oldCarAdJson = Json.obj(
     Title -> oldCarTitle,
@@ -69,10 +69,16 @@ class AdvertSpec extends Specification {
       val advertResult = incompleteAd.validate[Advert]
 
       (advertResult match {
-        case _:JsError =>
+        case _: JsError =>
           true
         case _ => false
       }) mustEqual true
+    }
+
+    "should write model to json" in {
+      val result = Json.toJson(newCarAd)
+
+      result mustEqual newCarAdJson
     }
   }
 }

@@ -11,11 +11,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AdvertsController {
-  def advertRepo = new AdvertService()
+  def advertService = new AdvertService()
 
   def list = Action.async { implicit request =>
     val sortBy = request.getQueryString("sortBy").getOrElse(Id)
-    advertRepo.findSortedBy(sortBy).map(adverts => Ok(Json.toJson(adverts)))
+    advertService.findSortedBy(sortBy).map(adverts => Ok(Json.toJson(adverts)))
   }
 
   def create = Action.async(BodyParsers.parse.json) { implicit request =>
@@ -24,7 +24,7 @@ class AdvertsController {
     advertResult match {
       case JsSuccess(advert, _) =>
         try {
-          advertRepo.save(advert).map(_ => Created)
+          advertService.save(advert).map(_ => Created)
         }
         catch {
           case _: Exception =>
@@ -34,5 +34,12 @@ class AdvertsController {
         println(error)
         Future(BadRequest)
     }
+  }
+
+  def read(id: String): Action[AnyContent] = Action.async { implicit request =>
+    advertService.select(id).map(_ match {
+      case Some(advert) => Ok(Json.toJson(advert))
+      case None => Ok
+    })
   }
 }
