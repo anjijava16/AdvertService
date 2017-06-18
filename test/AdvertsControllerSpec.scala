@@ -11,16 +11,16 @@ import play.api.libs.json.{JsArray, Json}
 import play.api.mvc.Results
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{GET, contentAsJson}
-import repositories.AdvertRepository
+import service.AdvertService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AdvertsControllerSpec extends Specification with Results with Mockito {
-  val mockAdvertRepository = mock[AdvertRepository]
+  val mockAdvertService = mock[AdvertService]
 
   class TestController extends AdvertsController() {
-    override def advertRepo: AdvertRepository = mockAdvertRepository
+    override def advertRepo: AdvertService = mockAdvertService
   }
 
   val controller = new TestController()
@@ -40,21 +40,21 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
 
   "AdvertsController" should {
     "list adverts sorted by id by default" in {
-      mockAdvertRepository.findSortedBy(eqTo(Id)) returns Future(ads)
+      mockAdvertService.findSortedBy(eqTo(Id)) returns Future(ads)
 
       val result = controller.list().apply(FakeRequest())
 
       contentAsJson(result) must be equalTo JsArray(ads)
-      there was (mockAdvertRepository).findSortedBy(eqTo(Id))
+      there was (mockAdvertService).findSortedBy(eqTo(Id))
     }
 
     "list adverts sorted by query param" in {
-      mockAdvertRepository.findSortedBy(eqTo(Price)) returns Future(ads)
+      mockAdvertService.findSortedBy(eqTo(Price)) returns Future(ads)
 
       val result = controller.list().apply(FakeRequest(GET, "/api/adverts?sortBy=price"))
 
       contentAsJson(result) must be equalTo JsArray(ads)
-      there was (mockAdvertRepository).findSortedBy(eqTo(Price))
+      there was (mockAdvertService).findSortedBy(eqTo(Price))
     }
 
   }
