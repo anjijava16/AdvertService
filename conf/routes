@@ -4,3 +4,6 @@
 # Adverts
 GET     /api/adverts        controllers.AdvertsController.list
 POST    /api/advert         controllers.AdvertsController.create
+GET     /api/advert/:id     controllers.AdvertsController.read(id: String)
+DELETE  /api/advert/:id     controllers.AdvertsController.delete(id: String)
+PATCH   /api/advert/:id     controllers.AdvertsController.update(id: String)

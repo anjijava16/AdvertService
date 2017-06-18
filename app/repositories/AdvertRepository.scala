@@ -15,9 +15,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AdvertRepository @Inject()(reactiveMongoApi: ReactiveMongoApi) extends AdvertMongoRepository {
   def collection = reactiveMongoApi.db.collection[JSONCollection]("adverts")
-  override def delete(id: String): Future[Status] = ???
 
-  override def update(id: String, advert: Advert): Future[Status] = ???
+  override def delete(id: String)(implicit ec: ExecutionContext): Future[Status] = collection.remove(BSONDocument(Id -> BSONObjectID(id))).map(_.ok)
+
+  override def update(id: String, advert: Advert)(implicit ec: ExecutionContext): Future[Status] = {
+    collection.update(
+      BSONDocument(Id -> BSONObjectID(id)),
+      BSONDocument("$set" -> getBsonDocument(advert))).map(_.ok)
+  }
 
   override def save(advert: Advert)(implicit ec: ExecutionContext): Future[Status] = {
     val document = getBsonDocument(advert)
@@ -32,7 +37,9 @@ class AdvertRepository @Inject()(reactiveMongoApi: ReactiveMongoApi) extends Adv
     cursor.collect[List]()
   }
 
-  override def select(id: String): Future[Option[JsObject]] = ???
+  override def select(id: String)(implicit ec: ExecutionContext): Future[Option[JsObject]] = {
+    collection.find(BSONDocument(Id -> BSONObjectID(id))).one[JsObject]
+  }
 
   private def getBsonDocument(advert: Advert) = {
     BSONDocument(
