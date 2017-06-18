@@ -63,5 +63,13 @@ class AdvertServiceSpec extends Specification with Mockito {
 
       there was mockAdvertRepository.delete(guid)
     }
+
+    "find by id" in {
+      mockAdvertRepository.select(guid) returns Future(Option(newCarAdJson))
+
+      advertService.select(guid)
+
+      there was mockAdvertRepository.select(guid)
+    }
   }
 }

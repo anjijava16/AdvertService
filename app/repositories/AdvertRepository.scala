@@ -16,4 +16,5 @@ class AdvertRepository {
 
   def findSortedBy(sortBy: String):Future[List[JsObject]] = ???
 
+  def select(id: String): Future[Option[JsObject]] = ???
 }

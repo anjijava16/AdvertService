@@ -13,10 +13,9 @@ class AdvertService @Inject()(advertRepository: AdvertRepository) {
 
   def update(id: String, advert: Advert): Future[Boolean] = advertRepository.update(id, advert)
 
-  def select(id: String): Future[Option[JsObject]] = ???
+  def select(id: String): Future[Option[JsObject]] = advertRepository.select(id)
 
   def save(advert: Advert): Future[Boolean] = advertRepository.save(advert)
 
   def findSortedBy(sortBy: String): Future[List[JsObject]] = advertRepository.findSortedBy(sortBy)
-
 }
