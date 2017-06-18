@@ -24,13 +24,10 @@ class AdvertsController @Inject()(advertService: AdvertService) {
 
     advertResult match {
       case JsSuccess(advert, _) =>
-        try {
-          advertService.save(advert).map(_ => Created)
-        }
-        catch {
-          case _: Exception =>
-            Future(InternalServerError)
-        }
+        advertService.save(advert).map({
+          case true => Created
+          case false => InternalServerError
+        })
       case error: JsError =>
         println(error)
         Future(BadRequest)

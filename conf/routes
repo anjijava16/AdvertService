@@ -3,3 +3,4 @@
 # ~~~~
 # Adverts
 GET     /api/adverts        controllers.AdvertsController.list
+POST    /api/advert         controllers.AdvertsController.create

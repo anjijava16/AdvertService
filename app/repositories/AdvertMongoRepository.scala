@@ -10,7 +10,7 @@ trait AdvertMongoRepository {
 
   def update(id: String, advert: Advert): Future[Status]
 
-  def save(advert: Advert): Future[Status]
+  def save(advert: Advert)(implicit ec: ExecutionContext): Future[Status]
 
   def findSortedBy(sortBy: String)(implicit ec: ExecutionContext): Future[List[JsObject]]
 
