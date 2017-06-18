@@ -42,4 +42,16 @@ class AdvertsController {
       case None => Ok
     })
   }
+
+  def update(id: String) = Action.async(BodyParsers.parse.json) { implicit request =>
+    val advertResult = request.body.validate[Advert]
+
+    advertResult match {
+      case JsSuccess(advert, _) =>
+        advertService.update(id).map(_ => Accepted)
+      case error: JsError =>
+        println(error)
+        Future(BadRequest)
+    }
+  }
 }

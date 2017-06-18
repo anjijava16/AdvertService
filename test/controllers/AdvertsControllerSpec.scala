@@ -74,6 +74,16 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
       contentAsJson(result) must be equalTo newCarAdJson
       there was mockAdvertService.select(eqTo(guid))
     }
+
+    "update advert by id" in {
+      mockAdvertService.update(eqTo(guid)) returns Future(true)
+
+      val request = FakeRequest().withBody(newCarAdJson)
+      val result: Future[Result] = controller.update(guid)(request)
+
+      status(result) must be equalTo ACCEPTED
+      there was mockAdvertService.update(eqTo(guid))
+    }
   }
 
 }
