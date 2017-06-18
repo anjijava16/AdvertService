@@ -13,7 +13,7 @@ class AdvertService @Inject()(advertRepository: AdvertRepository) {
 
   def update(id: String, advert: Advert): Future[Boolean] = advertRepository.update(id, advert)
 
-  def select(id: String): Future[Option[Advert]] = ???
+  def select(id: String): Future[Option[JsObject]] = ???
 
   def save(advert: Advert): Future[Boolean] = advertRepository.save(advert)
 

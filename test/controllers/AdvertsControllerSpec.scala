@@ -63,7 +63,7 @@ class AdvertsControllerSpec extends Specification with Results with Mockito {
     }
 
     "get advert by id" in {
-      mockAdvertService.select(eqTo(guid)) returns Future(Some(newCarAd))
+      mockAdvertService.select(eqTo(guid)) returns Future(Some(newCarAdJson))
 
       val result: Future[Result] = controller.read(guid).apply(FakeRequest())
 
